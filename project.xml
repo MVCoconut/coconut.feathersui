@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Coconut FeathersUI" package="coconut.feathersui" version="1.0.0"/>
+	<app main="Playground"/>
+
+	<haxeflag name="--macro" value="coconut.feathersui.macros.Setup.all()" />
+	
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window width="0" height="0"/>
+	<window fps="0" if="html5"/>
+	
+	<source path="src"/>
+	<source path="tests"/>
+	
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
+	<haxelib name="feathersui"/>
+	<haxelib name="coconut.ui"/>
+	<haxelib name="coconut.data"/>
+	<haxelib name="coconut.diffing"/>
+
+	<icon path="assets/icons/icon.svg"/>
+</project>
