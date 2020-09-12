@@ -66,8 +66,7 @@ class Attributes<T> {
 				pack: [],
 				pos: ctx.pos,
 				fields: fields,
-				kind: TDAlias(TAnonymous(fields)) // TDAlias(TExtend(['coconut.h2d.Events'.asTypePath([TPType(ctx.type.toComplex())])], fields))
-			}
+				kind: TDAlias(TAnonymous(fields))
 		});
 	#end
 }
