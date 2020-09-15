@@ -67,6 +67,7 @@ class Attributes<T> {
 				pos: ctx.pos,
 				fields: fields,
 				kind: TDAlias(TAnonymous(fields))
+			};
 		});
 	#end
 }
