@@ -17,8 +17,8 @@ class Setup {
 	}
 
 	static function hxxAugment():Array<Field> {
-		var cl = Context.getLocalClass().get(),
-			fields = Context.getBuildFields();
+		final cl = Context.getLocalClass().get();
+		final fields = Context.getBuildFields();
 
 		switch [for (f in fields) if (f.name == 'new') f] {
 			case [v]:

@@ -3,6 +3,7 @@ package coconut.feathersui.macros;
 #if macro
 import haxe.macro.Type;
 import haxe.macro.Expr;
+import haxe.macro.Context;
 
 using haxe.macro.Tools;
 using tink.MacroApi;
@@ -14,9 +15,9 @@ class Attributes<T> {
 	#if macro
 	static function build()
 		return tink.macro.BuildCache.getType("coconut.feathersui.macros.Attributes", function(ctx) {
-			var fields:Array<Field> = [], added = new Map();
-			var cl:ClassType = ctx.type.getClass();
-			function addField(name, pos, type:Type, ?mandatory)
+			final fields:Array<Field> = [], added = new Map();
+			final cl:ClassType = ctx.type.getClass();
+			function addField(name, pos, type:Type, ?mandatory) {
 				if (!added[name]) {
 					added[name] = true;
 					fields.push({
@@ -26,16 +27,19 @@ class Attributes<T> {
 						meta: if (mandatory) [] else [{name: ':optional', params: [], pos: pos}],
 					});
 				}
+			}
+				
 			function crawl(target:ClassType) {
-				var fields = target.fields.get();
+				final fields = target.fields.get();
 				for (f in fields)
 					if (f.isPublic) {
-						function add(?t)
+						function add(?t) {
 							if (t == null)
 								add(f.type)
-							else
+							else {
 								addField(f.name, f.pos, f.type);
-
+							}
+						}
 						switch f.kind {
 							case FMethod(MethDynamic):
 								f.meta.add(':keep', [], f.pos); // keep the function
@@ -49,14 +53,31 @@ class Attributes<T> {
 							default:
 						}
 					}
-				if (target.superClass != null)
+
+				final eventMeta = target.meta.extract(":event");
+				for (meta in eventMeta) {
+					final constant = meta.params[0];
+					final type = meta.params[1];
+					final eventName = ExprTools.getValue(constant);
+					final typeName = ExprTools.toString(type);
+					final fieldName = 'on${eventName.charAt(0).toUpperCase()}${eventName.substr(1)}';
+					addField(fieldName, Context.currentPos(), TFun([{ 
+						t: Context.typeof(type),
+						opt: false,
+						name: "e"
+					  }], Context.typeof(macro null)));
+				}
+				if (target.superClass != null) {
 					crawl(target.superClass.t.get()); // TODO: do something about params
+				}
+					
 			}
 			switch cl.constructor.get().type.reduce() {
 				case TFun(args, _):
-					for (a in args)
+					for (a in args) {
 						if (!a.opt)
 							addField(a.name, cl.pos, a.t, true);
+					}	
 				default:
 					throw 'assert';
 			}

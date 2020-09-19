@@ -9,10 +9,11 @@ using tink.MacroApi;
 
 class Instantiate {
 	macro static public function nativeView(attr) {
-		var attr = storeExpr(attr), cl = getLocalClass().get();
-
+		final attr = storeExpr(attr);
+		final cl = getLocalClass().get();
 		return switch [typeof(attr).reduce(), cl.constructor.get().type.reduce()] {
 			case [TAnonymous([for (f in _.get().fields) f.name => f] => fields), TFun(args, ret)]:
+
 				var callArgs = [
 					for (a in args)
 						if (!a.opt) { // TODO: might be better to also pass non-optional args directly
@@ -24,15 +25,18 @@ class Instantiate {
 				var setters = [
 					for (f in fields) {
 						var name = f.name;
-						macro @:pos(f.pos) if (existent.$name)
+						// TODO: fix this
+						if (name.indexOf("on") != 0) {
+							macro @:pos(f.pos) if (existent.$name)
 							ret.$name = $attr.$name;
+						}
 					}
 				];
 
 				var tp = cl.name.asTypePath();
 				macro {
-					var ret = new $tp($a{callArgs}),
-						existent = tink.Anon.existentFields($attr);
+					var ret = new $tp($a{callArgs});
+					var existent = tink.Anon.existentFields($attr);
 					$b{setters};
 					ret;
 				}
