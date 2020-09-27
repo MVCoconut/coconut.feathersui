@@ -14,7 +14,7 @@ class Instantiate {
 		return switch [typeof(attr).reduce(), cl.constructor.get().type.reduce()] {
 			case [TAnonymous([for (f in _.get().fields) f.name => f] => fields), TFun(args, ret)]:
 
-				var callArgs = [
+				final callArgs = [
 					for (a in args)
 						if (!a.opt) { // TODO: might be better to also pass non-optional args directly
 							fields.remove(a.name);
@@ -22,9 +22,9 @@ class Instantiate {
 						}
 				];
 
-				var setters = [
+				final setters = [
 					for (f in fields) {
-						var name = f.name;
+						final name = f.name;
 						// TODO: fix this
 						if (name.indexOf("on") != 0) {
 							macro @:pos(f.pos) if (existent.$name)
@@ -33,7 +33,7 @@ class Instantiate {
 					}
 				];
 
-				var tp = cl.name.asTypePath();
+				final tp = cl.name.asTypePath();
 				macro {
 					var ret = new $tp($a{callArgs});
 					var existent = tink.Anon.existentFields($attr);

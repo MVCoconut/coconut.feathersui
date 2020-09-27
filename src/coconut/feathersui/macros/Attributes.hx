@@ -4,6 +4,7 @@ package coconut.feathersui.macros;
 import haxe.macro.Type;
 import haxe.macro.Expr;
 import haxe.macro.Context;
+import haxe.macro.Type.Ref;
 
 using haxe.macro.Tools;
 using tink.MacroApi;
@@ -42,33 +43,36 @@ class Attributes<T> {
 						}
 						switch f.kind {
 							case FMethod(MethDynamic):
-								f.meta.add(':keep', [], f.pos); // keep the function
-								add(); // TODO: make this a callback
+								f.meta.add(':keep', [], f.pos);
+								add();
 							case FVar(_, AccCall):
 								fields.find(v -> v.name == 'set_' + f.name).meta.add(':keep', [], f.pos); // keep the setter
 								add();
 							case FVar(_, AccNormal):
-								f.meta.add(':keep', [], f.pos); // keep the variable
+								f.meta.add(':keep', [], f.pos);
 								add();
 							default:
 						}
 					}
 
 				final eventMeta = target.meta.extract(":event");
+				final callback = Context.getType("tink.core.Callback");
+				// TODO: remove dublicate in Events
 				for (meta in eventMeta) {
 					final constant = meta.params[0];
 					final type = meta.params[1];
 					final eventName = ExprTools.getValue(constant);
 					final typeName = ExprTools.toString(type);
 					final fieldName = 'on${eventName.charAt(0).toUpperCase()}${eventName.substr(1)}';
-					addField(fieldName, Context.currentPos(), TFun([{ 
-						t: Context.typeof(type),
-						opt: false,
-						name: "e"
-					  }], Context.typeof(macro null)));
+					switch(callback) {
+						case TAbstract(a, _):
+							addField(fieldName, Context.currentPos(), TAbstract(a,[Context.typeof(type)]));
+							default:
+							
+					}
 				}
 				if (target.superClass != null) {
-					crawl(target.superClass.t.get()); // TODO: do something about params
+					crawl(target.superClass.t.get());
 				}
 					
 			}

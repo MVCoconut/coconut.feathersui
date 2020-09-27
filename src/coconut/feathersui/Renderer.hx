@@ -99,32 +99,31 @@ private class FeathersUIBackend implements Applicator<ValidatingSprite> {
 
 	static final PLACEHOLDER: RenderResult = new MeasureSprite();
 }
-
 class FeathersUINodeType<Attr:{}, Real:ValidatingSprite> implements NodeType<Attr, Real> {
 	final factory:Attr->Real;
-	public function new(factory) {
+	final events: Map<String, String>;
+	public function new(factory, events) {
 		this.factory = factory;
+		this.events = events;
 	}
 	inline function set(target:Real, prop:String, val:Dynamic, old:Dynamic) {
-		// TODO: find better way
-		if (prop.indexOf("on") == 0) {
-			final eventName = prop.substr(2);
-			final event = '${eventName.substr(0, 1).toLowerCase()}${eventName.substr(1)}';
-			if (old != val) {
-				if (old != null)  {
-					target.removeEventListener(event, old);
+		switch(this.events.get(prop)) {
+			case null:
+				Reflect.setProperty(target, prop, val);
+			case event:
+				if (old != val) {
+					if (old != null)  {
+						target.removeEventListener(event, old);
+					}
+					if (val != null) {
+						target.addEventListener(event, val);
+					}
 				}
-				if (val != null) {
-					target.addEventListener(event, val);
-				}
-			}
-		} else {
-			Reflect.setProperty(target, prop, val);
 		}
 	}
 	public function create(a:Attr):Real {
 		final ret = factory(a);
-		// TODO: should not be necessary
+		// TODO: should be done in factory
 		Differ.updateObject(ret, a, null, set);
 		return ret;
 	}

@@ -13,11 +13,7 @@
 	<source path="src"/>
 	<source path="tests"/>
 	
-	<haxelib name="openfl"/>
-	<haxelib name="actuate"/>
 	<haxelib name="feathersui"/>
-	<haxelib name="coconut.ui"/>
-	<haxelib name="coconut.data"/>
 	<haxelib name="coconut.diffing"/>
 
 	<icon path="assets/icons/icon.svg"/>
