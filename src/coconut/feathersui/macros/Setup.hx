@@ -28,11 +28,12 @@ class Setup {
 				return null;
 		}
 
-		var self = Context.getLocalType().toComplex(); // TODO: type params
-
+		final self = Context.getLocalType().toComplex(); // TODO: type params
 		return fields.concat((macro class {
-			static var COCONUT_NODE_TYPE = new coconut.feathersui.Renderer.FeathersUINodeType<coconut.feathersui.macros.Attributes<$self>,
-				feathers.core.ValidatingSprite>(attr -> coconut.feathersui.macros.Instantiate.nativeView(attr));
+			static var COCONUT_NODE_TYPE = new coconut.feathersui.Renderer.FeathersUINodeType<
+			coconut.feathersui.macros.Attributes<$self>,
+			feathers.core.ValidatingSprite
+				>((attr) -> coconut.feathersui.macros.Instantiate.nativeView(attr), coconut.feathersui.macros.Events.getEvents());
 
 			static public inline function fromHxx(hxxMeta:{
 				@:optional var key(default, never):coconut.diffing.Key;

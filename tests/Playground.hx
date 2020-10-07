@@ -20,7 +20,7 @@ class MyView extends View {
 	function render() '
 		<ScrollContainer>
 			<Label text="Curretn value: ${value}" x={100} />
-			<Button text= "My own button" x={100} y={100} onTrigger=${function(e)value++} />
+			<Button text= "My own button" x={100} y={100} onTrigger=${value++} />
 		</ScrollContainer>
 	';
 }
