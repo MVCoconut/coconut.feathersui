@@ -1,18 +1,20 @@
 {
     "name": "coconut.feathersui",
+    "url" : "https://github.com/MVCoconut/coconut.feathersui",
     "license": "MIT",
     "tags": [
       "coconut",
       "feathersui"
     ],
+    "description": "Coconut UI backend for feathers UI",
     "classPath": "src",
     "contributors": [
       "Hersir88"
     ],
     "releasenote": "initial release",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "dependencies": {
       "feathersui": "",
-      "coconut.diffing": ""
+      "coconut.diffing": "0.2.1"
     }
   }
