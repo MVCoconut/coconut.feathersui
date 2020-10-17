@@ -1,4 +1,0 @@
--cp src
--lib coconut.diffing
--lib feathersui
-extraParams.hxml

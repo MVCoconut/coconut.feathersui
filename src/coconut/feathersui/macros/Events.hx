@@ -16,12 +16,16 @@ class Events {
 	final events = new Map<String, String>();
 	function crawl(target: ClassType) {
 		final eventMeta: Array<Dynamic> = target.meta.extract(":event");
+		function getEventName(eventMeta:MetadataEntry):String {
+			final typedExprDef = Context.typeExpr(eventMeta.params[0]).expr;
+			return switch (typedExprDef) {
+				case TCast({expr: TConst(TString(s))}, _): s;
+				  case _: null;
+			};
+		}
 		// TODO: remove dublicate in Attributes
 		for (meta in eventMeta) {
-			final constant = meta.params[0];
-			final type = meta.params[1];
-			final eventName: String = ExprTools.getValue(constant);
-			final typeName = ExprTools.toString(type);
+			final eventName = getEventName(meta);
 			final fieldName: String = 'on${eventName.charAt(0).toUpperCase()}${eventName.substr(1)}';
 			events.set(fieldName, eventName);
 		}

@@ -29,7 +29,23 @@ class Attributes<T> {
 					});
 				}
 			}
-				
+			function getEventName(eventMeta:MetadataEntry):String {
+				final typedExprDef = Context.typeExpr(eventMeta.params[0]).expr;
+				return switch (typedExprDef) {
+					case TCast({expr: TConst(TString(s))}, _): s;
+  					case _: null;
+				};
+			}
+			function getEventType(eventMeta:MetadataEntry) {
+				final typedExprDef = Context.typeof(eventMeta.params[0]);
+				switch (typedExprDef) {
+					case TAbstract(a, _):
+						return a.toString();
+  					case _:
+						  return null;
+				};
+				return null;
+			}	
 			function crawl(target:ClassType) {
 				final fields = target.fields.get();
 				for (f in fields)
@@ -59,16 +75,13 @@ class Attributes<T> {
 				final callback = Context.getType("tink.core.Callback");
 				// TODO: remove dublicate in Events
 				for (meta in eventMeta) {
-					final constant = meta.params[0];
-					final type = meta.params[1];
-					final eventName = ExprTools.getValue(constant);
-					final typeName = ExprTools.toString(type);
+					final eventName = getEventName(meta);
+					final type = getEventType(meta);
 					final fieldName = 'on${eventName.charAt(0).toUpperCase()}${eventName.substr(1)}';
 					switch(callback) {
 						case TAbstract(a, _):
-							addField(fieldName, Context.currentPos(), TAbstract(a,[Context.typeof(type)]));
-							default:
-							
+							addField(fieldName, Context.currentPos(), TAbstract(a,[Context.getType(type)]));
+							default:	
 					}
 				}
 				if (target.superClass != null) {
