@@ -12,7 +12,7 @@
       "UldisB"
     ],
     "releasenote": "initial release",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
       "feathersui": "",
       "coconut.diffing": "0.2.1"

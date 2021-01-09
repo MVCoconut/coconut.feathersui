@@ -39,8 +39,8 @@ class Attributes<T> {
 			function getEventType(eventMeta:MetadataEntry) {
 				final typedExprDef = Context.typeof(eventMeta.params[0]);
 				switch (typedExprDef) {
-					case TAbstract(a, _):
-						return a.toString();
+					case TAbstract(a, b):
+						return b[0].toString();
   					case _:
 						  return null;
 				};

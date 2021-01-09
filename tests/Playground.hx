@@ -1,3 +1,4 @@
+import feathers.events.TriggerEvent;
 import haxe.Timer;
 import feathers.controls.Application;
 import feathers.controls.Label;
@@ -20,7 +21,10 @@ class MyView extends View {
 	function render() '
 		<ScrollContainer>
 			<Label text="Curretn value: ${value}" x={100} />
-			<Button text= "My own button" x={100} y={100} onTrigger=${value++} />
+			<Button text= "My own button" x={100} y={100} onTrigger=${onTriger} />
 		</ScrollContainer>
 	';
+	function onTriger(e: TriggerEvent) {
+		value++;
+	}
 }

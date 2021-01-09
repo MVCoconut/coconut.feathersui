@@ -13,6 +13,8 @@
 	<source path="src"/>
 	<source path="tests"/>
 	
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
 	<haxelib name="feathersui"/>
 	<haxelib name="coconut.diffing"/>
 
