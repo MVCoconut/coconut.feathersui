@@ -14,6 +14,7 @@ using Lambda;
 #end
 class Attributes<T> {
 	#if macro
+	private static final OpenFLEvent = "openfl.events.Event";
 	static function build()
 		return tink.macro.BuildCache.getType("coconut.feathersui.macros.Attributes", function(ctx) {
 			final fields:Array<Field> = [], added = new Map();
@@ -33,19 +34,56 @@ class Attributes<T> {
 				final typedExprDef = Context.typeExpr(eventMeta.params[0]).expr;
 				return switch (typedExprDef) {
 					case TCast({expr: TConst(TString(s))}, _): s;
+					case TConst(TString(s)): s;
+					case TField(_, FStatic(_, _.get() => f)):
+						switch (f.expr().expr) {
+							case TConst(TString(s)): s;
+							case TCast({expr: TConst(TString(s))}, _): s;
+							case _: null;	
+						}
   					case _: null;
 				};
 			}
+			function isOfEventType(target:ClassType): Bool {
+				var currentTarget = target;
+				var searching = true;
+				var result = false;
+				while (searching) {
+					final type = currentTarget.pack.concat([currentTarget.name]).join('.');
+					if (type == OpenFLEvent) {
+						searching = false;
+						result = true;
+					} else if (currentTarget.superClass != null) {
+						currentTarget = currentTarget.superClass.t.get();
+					} else {
+						searching = false;
+					}
+				}
+				return result;
+			}
 			function getEventType(eventMeta:MetadataEntry) {
-				final typedExprDef = Context.typeof(eventMeta.params[0]);
-				switch (typedExprDef) {
-					case TAbstract(a, _):
-						return a.toString();
-  					case _:
-						  return null;
+				final typeOfDef = Context.typeof(eventMeta.params[0]);
+				final typeExprDef = Context.typeExpr(eventMeta.params[0]);
+				switch (typeExprDef.expr) {
+					case TField(_, FStatic(_.get() => cl, _.get() => f)):
+						final initialType = cl.pack.concat([cl.name]).join('.');
+						if (isOfEventType(cl)) {
+							return initialType;
+						} else {
+							return OpenFLEvent;
+						}
+					default:
+				}
+				switch (typeOfDef) {
+					case TAbstract(_, p):
+						return p[0].toString();
+					case TInst(_,_):
+						return OpenFLEvent;
+  					default:
+						
 				};
 				return null;
-			}	
+			}
 			function crawl(target:ClassType) {
 				final fields = target.fields.get();
 				for (f in fields)
