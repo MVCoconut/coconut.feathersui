@@ -20,6 +20,13 @@ class Events {
 			final typedExprDef = Context.typeExpr(eventMeta.params[0]).expr;
 			return switch (typedExprDef) {
 				case TCast({expr: TConst(TString(s))}, _): s;
+				case TConst(TString(s)): s;
+				case TField(_, FStatic(_, _.get() => f)):
+					switch (f.expr().expr) {
+						case TConst(TString(s)): s;
+						case TCast({expr: TConst(TString(s))}, _): s;
+						case _: null;	
+					}
 				  case _: null;
 			};
 		}
