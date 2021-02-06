@@ -1,23 +1,15 @@
 package coconut.feathersui;
 
-import feathers.controls.Label;
-import coconut.diffing.Cursor;
-import coconut.diffing.Applicator;
-import coconut.diffing.NodeType;
-import coconut.diffing.Rendered;
-import coconut.diffing.Differ;
-import coconut.diffing.VNode;
-import coconut.diffing.Widget;
+import coconut.diffing.*;
 import tink.state.Observable;
-import feathers.core.ValidatingSprite;
-import feathers.core.MeasureSprite;
-import openfl.display.DisplayObjectContainer;
+import feathers.core.*;
+import openfl.display.*;
 
 class Renderer {
-	static var DIFFER = new Differ(new FeathersUIBackend());
+	static final BACKEND = new FeathersUIBackend();
 
-	static public function mountInto(target:DisplayObjectContainer, virtual:RenderResult) {
-		DIFFER.render([virtual], cast(target, ValidatingSprite));
+	static public function mountInto(target:ValidatingSprite, virtual:RenderResult) {
+		Root.fromNative(target, BACKEND).render(virtual);
 	}
 
 	static public function getNative(view:View):Null<ValidatingSprite> {
@@ -25,12 +17,9 @@ class Renderer {
 	}
 
 	static public function getAllNative(view:View):Array<ValidatingSprite> {
-		return switch @:privateAccess view._coco_lastRender {
-			case null: [];
-			case r: r.flatten(null);
-		}
+		return Widget.getAllNative(view);
 	}
-	
+
 	static public inline function updateAll() {
 		Observable.updateAll();
 	}
@@ -42,66 +31,50 @@ class Renderer {
 
 private class FeathersUICursor implements Cursor<ValidatingSprite> {
 	var pos:Int;
-	var container:DisplayObjectContainer;
+	final container:DisplayObjectContainer;
+	public final applicator:Applicator<ValidatingSprite>;
 
-	public function new(container:DisplayObjectContainer, pos:Int) {
+	public function new(applicator, container:DisplayObjectContainer, pos:Int) {
+		this.applicator = applicator;
 		this.container = container;
 		this.pos = pos;
 	}
 
-	public function insert(real:ValidatingSprite):Bool {
-		final inserted = real.parent != container;
-		container.addChildAt(real, pos);
-		pos++;
-		return inserted;
+	public function insert(real:ValidatingSprite) {
+		container.addChildAt(real, pos++);
 	}
 
-	public function delete():Bool {
-		return if (pos <= container.numChildren) {
-			container.removeChild(current());
-			true;
-		} else false;
+	public function delete(count:Int) {
+		for (i in 0...count)
+			container.removeChildAt(pos);
 	}
-
-	public function step():Bool {
-		return if (pos >= container.numChildren) false; else ++pos == container.numChildren;
-	}
-	public function current():ValidatingSprite {
-		return cast(container.getChildAt(pos), ValidatingSprite);
-	}	
 }
 
 private class FeathersUIBackend implements Applicator<ValidatingSprite> {
 	public function new() {}
 
-	final registry:Map<ValidatingSprite, Rendered<ValidatingSprite>> = new Map();
-
-	public function unsetLastRender(target:ValidatingSprite):Rendered<ValidatingSprite> {
-		var ret = registry[target];
-		registry.remove(target);
-		return ret;
+	public function siblings(target:ValidatingSprite):Cursor<ValidatingSprite> {
+		return new FeathersUICursor(this, target.parent, target.parent.getChildIndex(target));
 	}
-	public function setLastRender(target:ValidatingSprite, r:Rendered<ValidatingSprite>):Void {
-		registry[target] = r;
-	}
-	public function getLastRender(target:ValidatingSprite):Null<Rendered<ValidatingSprite>> {
-		return registry[target];
-	}
-	public function traverseSiblings(target:ValidatingSprite):Cursor<ValidatingSprite> {
-		return new FeathersUICursor(target.parent, target.parent.getChildIndex(target));
-	}
-	public function traverseChildren(target:ValidatingSprite):Cursor<ValidatingSprite> {
-		return new FeathersUICursor(target, 0);
-	}
-	public function placeholder(target):RenderResult {
-		return PLACEHOLDER;
+	public function children(target:ValidatingSprite):Cursor<ValidatingSprite> {
+		return new FeathersUICursor(this, target, 0);
 	}
 
-	static final PLACEHOLDER: RenderResult = new MeasureSprite();
+	static final pool = [];
+
+	public function createMarker():ValidatingSprite
+		return switch pool.pop() {
+			case null: new MeasureSprite();
+			case v: v;
+		}
+
+	public function releaseMarker(m:ValidatingSprite)
+		pool.push(m);
 }
-class FeathersUINodeType<Attr:{}, Real:ValidatingSprite> implements NodeType<Attr, Real> {
+class FeathersUINodeType<Attr:{}, Real:ValidatingSprite> implements Factory<Attr, ValidatingSprite, Real> {
 	final factory:Attr->Real;
 	final events: Map<String, String>;
+	public final type = new TypeId();
 	public function new(factory, events) {
 		this.factory = factory;
 		this.events = events;
@@ -111,23 +84,20 @@ class FeathersUINodeType<Attr:{}, Real:ValidatingSprite> implements NodeType<Att
 			case null:
 				Reflect.setProperty(target, prop, val);
 			case event:
-				if (old != val) {
-					if (old != null)  {
-						target.removeEventListener(event, old);
-					}
-					if (val != null) {
-						target.addEventListener(event, val);
-					}
+				if (old != null)  {
+					target.removeEventListener(event, old);
+				}
+				if (val != null) {
+					target.addEventListener(event, val);
 				}
 		}
 	}
 	public function create(a:Attr):Real {
 		final ret = factory(a);
-		// TODO: should be done in factory
-		Differ.updateObject(ret, a, null, set);
+		update(ret, a, null);
 		return ret;
 	}
-	public function update(r:Real, old:Attr, nu:Attr):Void {
-		Differ.updateObject(r, nu, old, set);
-	}	
+	public function update(r:Real, nu:Attr, old:Attr):Void {
+		Factory.Properties.set(r, nu, old, set);
+	}
 }

@@ -10,10 +10,6 @@ abstract RenderResult(VNode<ValidatingSprite>) to VNode<ValidatingSprite> from V
 	}
 
 	@:from static function ofNode(n:ValidatingSprite):RenderResult {
-		return VNativeInst(n);
-	}
-
-	@:from static function ofView(v:View):RenderResult {
-		return VWidgetInst(v);
+		return VNode.embed(n);
 	}
 }
