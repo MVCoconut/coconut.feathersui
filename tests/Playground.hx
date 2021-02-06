@@ -17,6 +17,7 @@ class Playground extends Application {
 		Renderer.mount(this, <MyView/>);
 	}
 
+	#if nadakofl
 	static function main() {
 		openfl.display.Stage.create(Playground.new, {
 			element: js.Browser.document.getElementById("main"),
@@ -27,6 +28,7 @@ class Playground extends Application {
 			stencilBuffer: true
 		});
 	}
+	#end
 }
 
 class MyView extends View {
