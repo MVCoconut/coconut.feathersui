@@ -16,6 +16,17 @@ class Playground extends Application {
 		layout = new AnchorLayout();
 		Renderer.mount(this, <MyView/>);
 	}
+
+	static function main() {
+		openfl.display.Stage.create(Playground.new, {
+			element: js.Browser.document.getElementById("main"),
+			background: 0xCCCCCC,
+			allowHighDPI: true,
+			resizable: true,
+			depthBuffer: false,
+			stencilBuffer: true
+		});
+	}
 }
 
 class MyView extends View {
@@ -32,8 +43,8 @@ class MyView extends View {
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
 			<Button text= "My own button" onTrigger=${onTriger} />
-			<TestControl 
-				onMyEvent=${onMyEvent} 
+			<TestControl
+				onMyEvent=${onMyEvent}
 				onMyEvent2=${onMyEvent2}
 				onMyEvent3=${onMyEvent3}
 				onMyEvent4=${onMyEvent4}
