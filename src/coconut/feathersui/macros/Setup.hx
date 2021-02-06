@@ -33,7 +33,7 @@ class Setup {
 
 		final self = Context.getLocalType().toComplex(); // TODO: type params
 		return fields.concat((macro class {
-			static var COCONUT_NODE_TYPE = new coconut.feathersui.Renderer.FeathersUINodeType<
+			static final COCONUT_NODE_TYPE = new coconut.feathersui.Renderer.FeathersUINodeType<
 				coconut.feathersui.macros.Attributes<$self>,
 				$self
 			>((attr) -> coconut.feathersui.macros.Instantiate.nativeView(attr), coconut.feathersui.macros.Events.getEvents());
