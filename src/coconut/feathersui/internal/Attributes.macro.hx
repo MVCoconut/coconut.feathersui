@@ -132,7 +132,7 @@ class Attributes {
     final typeExprDef = Context.typeExpr(e);
     switch (typeExprDef.expr) {
       case TField(_, FStatic(_.get() => cl, _.get() => f)):
-        final initialType = cl.pack.concat([cl.name]).join('.');
+        final initialType = cl.module + '.' + cl.name;
         if (isOfEventType(cl)) {
           return initialType;
         } else {

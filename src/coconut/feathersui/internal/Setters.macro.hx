@@ -25,12 +25,11 @@ class Setters {
         }
 
         for (e in getEvents(cls)) {
-          var name = macro $v{e.name},
-              type = e.type;
+          var type = e.type;
           type = macro : tink.core.Callback<$type>;
-          init.push(macro ret.set($name, function (target:$target, nu:$type, old:$type) {
-            if (old != null) target.removeEventListener($name, old);
-            if (nu != null) target.addEventListener($name, nu);
+          init.push(macro ret.set($v{e.name}, function (target:$target, nu:$type, old:$type) {
+            if (old != null) target.removeEventListener($v{e.id}, old);
+            if (nu != null) target.addEventListener($v{e.id}, nu);
           }));
         }
 
