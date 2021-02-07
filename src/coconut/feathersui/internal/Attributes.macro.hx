@@ -7,11 +7,48 @@ using haxe.macro.Tools;
 using tink.MacroApi;
 
 class Attributes {
-  static function isDisplayObject(c:ClassType)
+  static public function isDisplayObject(c:ClassType)
     return switch c {
       case { pack: ['flash' | 'openfl', 'display'], name: 'DisplayObject' }: true;
       default: false;
     }
+
+  static public function getEvents(cls:ClassType)
+    return [
+      for (m in cls.meta.extract(':event'))
+        for (p in m.params) {
+          var id = getEventName(p);
+          {
+            id: id,
+            name: 'on${id.charAt(0).toUpperCase()}${id.substr(1)}',
+            type: getEventType(p).toComplex(),
+            pos: p.pos,
+          }
+        }
+    ];
+
+  static public function getFields(cls:ClassType)
+    return [
+      for (f in cls.fields.get())
+        if (f.isPublic) switch f.kind {
+          case FMethod(MethDynamic):
+            {
+              src: f,
+              type: f.type.toComplex()
+            };
+          case FVar(AccCall | AccNormal, AccCall | AccNormal):
+            {
+              src: f,
+              type:
+                // if (f.type.match(TInst(isDisplayObject(_.get()) => true, _)))
+                //   macro : coconut.feathersui.RenderResult
+                // else
+                  f.type.toComplex()
+            };
+          default:
+            continue;
+        }
+    ];
 
   static function build() {
     return tink.macro.BuildCache.getType("coconut.feathersui.internal.Attributes", null, null, function(ctx) {
@@ -41,27 +78,11 @@ class Attributes {
           access: [AFinal],
         });
 
-      function addField(f:ClassField) {
-        var isDisplayObject = f.type.match(TInst(isDisplayObject(_.get()) => true, _));
-        add(f, if (isDisplayObject) macro : coconut.feathersui.RenderResult else f.type.toComplex());
-      }
+      for (f in getFields(cls))
+        add(f.src, f.type);
 
-      for (f in cls.fields.get())
-        if (f.isPublic) switch f.kind {
-          case FMethod(MethDynamic):
-            addField(f);
-          case FVar(AccCall | AccNormal, AccCall | AccNormal):
-            addField(f);
-          default:
-        }
-
-      for (m in cls.meta.extract(':event'))
-        for (p in m.params) {
-          var name = getEventName(p),
-              type = getEventType(p).toComplex();
-
-          add({ name: 'on' + name.charAt(0).toUpperCase() + name.substr(1), pos: p.pos }, macro : tink.core.Callback<$type>);
-        }
+      for (e in getEvents(cls))
+        add(e, { var t = e.type; macro : tink.core.Callback<$t>; });
 
       var ret = macro class $name {}
 
