@@ -13,6 +13,11 @@ class Attributes {
       default: false;
     }
 
+  static public function attrType(f)
+    return
+      if (f.isDisplayObject) macro : coconut.feathersui.RenderResult;
+      else (f.field:ClassField).type.toComplex();
+
   static public function getEvents(cls:ClassType)
     return [
       for (m in cls.meta.extract(':event'))
@@ -33,17 +38,13 @@ class Attributes {
         if (f.isPublic) switch f.kind {
           case FMethod(MethDynamic):
             {
-              src: f,
-              type: f.type.toComplex()
+              field: f,
+              isDisplayObject: false,
             };
           case FVar(AccCall | AccNormal, AccCall | AccNormal):
             {
-              src: f,
-              type:
-                // if (f.type.match(TInst(isDisplayObject(_.get()) => true, _)))
-                //   macro : coconut.feathersui.RenderResult
-                // else
-                  f.type.toComplex()
+              field: f,
+              isDisplayObject: f.type.match(TInst(isDisplayObject(_.get()) => true, _)),
             };
           default:
             continue;
@@ -79,7 +80,7 @@ class Attributes {
         });
 
       for (f in getFields(cls))
-        add(f.src, f.type);
+        add(f.field, attrType(f));
 
       for (e in getEvents(cls))
         add(e, { var t = e.type; macro : tink.core.Callback<$t>; });
