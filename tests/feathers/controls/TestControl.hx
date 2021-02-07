@@ -1,8 +1,7 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
-import openfl.events.Event;
-import openfl.events.EventType;
+import openfl.events.*;
 
 @:event(feathers.controls.TestControl.MY_EVENT)
 @:event(feathers.controls.TestControl.MY_EVENT2)
@@ -22,10 +21,4 @@ class TestControl extends FeathersControl {
             dispatchEvent(new CustomeEvent(CustomeEvent.MY_EVENT4));
         };
     }
-}
-
-class CustomeEvent extends Event {
-    public static final MY_EVENT3: EventType<CustomeEvent> = "myEvent3";
-    public static inline var MY_EVENT4: EventType<CustomeEvent> = "myEvent4";
-    public static inline var MY_EVENT5 = "myEvent5";
 }

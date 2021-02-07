@@ -128,11 +128,11 @@ class Attributes {
   }
 
   static function getEventType(e:Expr) {
-    final typeOfDef = Context.typeof(e);
     final typeExprDef = Context.typeExpr(e);
+    final typeOfDef = typeExprDef.t;
     switch (typeExprDef.expr) {
       case TField(_, FStatic(_.get() => cl, _.get() => f)):
-        final initialType = cl.module + '.' + cl.name;
+        final initialType = cl.pack.concat([cl.name]).join('.');
         if (isOfEventType(cl)) {
           return initialType;
         } else {
