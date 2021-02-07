@@ -32,14 +32,18 @@ class Setup {
 		}
 
 		final self = Context.getLocalType().toComplex(); // TODO: type params
+
+		final attr = coconut.feathersui.internal.Attributes<$self>;
+		final meta = macro : {
+			@:optional var key(default, never):coconut.diffing.Key;
+			@:optional var ref(default, never):coconut.ui.Ref<$self>;
+		};
+
 		return fields.concat((macro class {
 
 			static public inline function fromHxx(
-				hxxMeta:{
-					@:optional var key(default, never):coconut.diffing.Key;
-					@:optional var ref(default, never):coconut.ui.Ref<$self>;
-				},
-				attr:coconut.feathersui.internal.Attributes<$self>, ?children:coconut.feathersui.Children
+				hxxMeta: $meta,
+				attr:$attr, ?children:coconut.feathersui.Children
 			):coconut.feathersui.RenderResult {
 				return new coconut.feathersui.internal.VNode<$self>(attr, hxxMeta.key, hxxMeta.ref, children);
 			}
