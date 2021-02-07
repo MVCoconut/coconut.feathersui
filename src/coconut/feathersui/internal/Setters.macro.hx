@@ -20,14 +20,19 @@ class Setters {
         for (f in getFields(cls)) {
           var name = f.field.name,
               type = attrType(f);
-          var expr = if (f.isDisplayObject) macro null else macro nu;
-          init.push(macro ret.set($v{name}, function (target:$target, nu:$type, old:$type) target.$name = $expr));
+          var expr =
+            if (f.isDisplayObject) {
+              var set = 'set_$name';
+              macro rnode.$set(nu, parent, later);
+            }
+            else macro target.$name = nu;
+          init.push(macro ret.set($v{name}, function (target, nu:$type, old:$type, rnode, parent, later) $expr));
         }
 
         for (e in getEvents(cls)) {
           var type = e.type;
           type = macro : tink.core.Callback<$type>;
-          init.push(macro ret.set($v{e.name}, function (target:$target, nu:$type, old:$type) {
+          init.push(macro ret.set($v{e.name}, function (target:$target, nu:$type, old:$type, _, _, _) {
             if (old != null) target.removeEventListener($v{e.id}, old);
             if (nu != null) target.addEventListener($v{e.id}, nu);
           }));
@@ -48,7 +53,7 @@ class Setters {
       var ret = macro class $name {
 
         static final INST = {
-          var ret = new Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic)->Void>();
+          var ret = new Map<String, (target:$target, next:Dynamic, prev:Dynamic, rnode:coconut.feathersui.internal.RNode<$target>, parent:coconut.diffing.internal.Parent, later:(task:()->Void)->Void)->Void>();
           $b{init};
           ret;
         }
@@ -56,11 +61,18 @@ class Setters {
         public inline function new()
           this = INST;
 
-        public function set(target:$target, nu:coconut.feathersui.internal.Attributes<$target>, old:coconut.feathersui.internal.Attributes<$target>, rnode:coconut.feathersui.internal.RNode<$target>)
-          coconut.diffing.Factory.Properties.set(target, cast nu, cast old, (target, name, nu, old) -> this[name](target, nu, old));
+        public function set(
+          target:$target,
+          nu:coconut.feathersui.internal.Attributes<$target>,
+          old:coconut.feathersui.internal.Attributes<$target>,
+          rnode:coconut.feathersui.internal.RNode<$target>,
+          parent:coconut.diffing.internal.Parent,
+          later:(task:()->Void)->Void
+        )
+          coconut.diffing.Factory.Properties.set(target, cast nu, cast old, (target, name, nu, old) -> this[name](target, nu, old, rnode, parent, later));
       }
 
-      ret.kind = TDAbstract(macro : Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic)->Void>);
+      ret.kind = TDAbstract(macro : Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic, rnode:Dynamic, parent:coconut.diffing.internal.Parent, later:(task:()->Void)->Void)->Void>);
       ret.meta.push({ name: ':forward', params: [macro keyValueIterator], pos: (macro null).pos });
       return ret;
     });

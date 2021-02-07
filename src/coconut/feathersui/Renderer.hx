@@ -71,33 +71,3 @@ private class FeathersUIBackend implements Applicator<ValidatingSprite> {
 	public function releaseMarker(m:ValidatingSprite)
 		pool.push(m);
 }
-class FeathersUINodeType<Attr:{}, Real:ValidatingSprite> implements Factory<Attr, ValidatingSprite, Real> {
-	final factory:Attr->Real;
-	final events: Map<String, String>;
-	public final type = new TypeId();
-	public function new(factory, events) {
-		this.factory = factory;
-		this.events = events;
-	}
-	inline function set(target:Real, prop:String, val:Dynamic, old:Dynamic) {
-		switch(this.events.get(prop)) {
-			case null:
-				Reflect.setProperty(target, prop, val);
-			case event:
-				if (old != null)  {
-					target.removeEventListener(event, old);
-				}
-				if (val != null) {
-					target.addEventListener(event, val);
-				}
-		}
-	}
-	public function create(a:Attr):Real {
-		final ret = factory(a);
-		update(ret, a, null);
-		return ret;
-	}
-	public function update(r:Real, nu:Attr, old:Attr):Void {
-		Factory.Properties.set(r, nu, old, set);
-	}
-}

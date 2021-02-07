@@ -1,14 +1,8 @@
 import openfl.events.Event;
 import feathers.events.TriggerEvent;
-import feathers.controls.Application;
-import feathers.controls.Label;
-import feathers.controls.Button;
-import feathers.controls.TestControl;
-import feathers.controls.LayoutGroup;
-import feathers.layout.VerticalLayout;
-import coconut.feathersui.View;
-import coconut.feathersui.Renderer;
-import feathers.layout.AnchorLayout;
+import feathers.controls.*;
+import coconut.feathersui.*;
+import feathers.layout.*;
 
 class Playground extends Application {
 	public function new() {
@@ -48,6 +42,7 @@ class MyView extends View {
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
 			<Button text= "My own button" onTrigger=${onTriger} />
+			<FormItem text="User Name" content=${hxx('<TextInput prompt="hello@example.com"/>')}/>
 			<TestControl
 				onMyEvent=${onMyEvent}
 				onMyEvent2=${onMyEvent2}
