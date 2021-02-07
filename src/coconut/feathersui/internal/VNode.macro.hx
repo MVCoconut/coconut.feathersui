@@ -13,15 +13,18 @@ class VNode {
 
         static final TYPE = new coconut.diffing.TypeId();
 
-        public function new(data:coconut.feathersui.internal.Attributes<$target>, ?key, ?ref, ?children) {
+        public final data:coconut.feathersui.internal.Attributes<$target>;
+
+        public function new(data, ?key, ?ref, ?children) {
           super(TYPE, key, ref, children);
+          this.data = data;
         }
 
         override public function render(parent, cursor, later):coconut.diffing.internal.RNode<feathers.core.ValidatingSprite>
           return new coconut.feathersui.internal.RNode<$target>(this, $i{name}, parent, cursor, later);
 
         override function create() {
-          return ${ctx.type.getID().instantiate()};
+          return @:privateAccess ${ctx.type.getID().instantiate()};//this is not good
         }
       };
     });

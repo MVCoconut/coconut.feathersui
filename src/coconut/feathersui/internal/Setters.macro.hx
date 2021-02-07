@@ -1,7 +1,6 @@
 package coconut.feathersui.internal;
 
 import coconut.feathersui.internal.Attributes.*;
-import haxe.macro.Context;
 import haxe.macro.Type;
 import haxe.macro.Expr;
 using haxe.macro.Tools;
@@ -16,49 +15,54 @@ class Setters {
           cls = ctx.type.getClass(),
           init = [];
 
-      if (!isDisplayObject(cls)) {
-        var parent = cls.superClass.t.toString().asComplexType();
-        var classObject = Context.typeExpr(macro new coconut.feathersui.internal.Setters<$parent>()).t.getID();
-        init.push(macro for (k => v in @:privateAccess $p{classObject.split('.')}.PROPS) ret.set(k, v));
+      function process(cls:ClassType, maxDepth:Int) {
+        if (maxDepth < 1) return;
+        for (f in getFields(cls)) {
+          var name = f.field.name,
+              type = attrType(f);
+          var expr = if (f.isDisplayObject) macro null else macro nu;
+          init.push(macro ret.set($v{name}, function (target:$target, nu:$type, old:$type) target.$name = $expr));
+        }
+
+        for (e in getEvents(cls)) {
+          var name = macro $v{e.name},
+              type = e.type;
+          type = macro : tink.core.Callback<$type>;
+          init.push(macro ret.set($name, function (target:$target, nu:$type, old:$type) {
+            if (old != null) target.removeEventListener($name, old);
+            if (nu != null) target.addEventListener($name, nu);
+          }));
+        }
+
+        if (!isDisplayObject(cls))
+          process(cls.superClass.t.get(), maxDepth - 1);
       }
 
-      for (f in getFields(cls)) {
-        var name = f.field.name;
-        var type = attrType(f);
-
-        var expr =
-          if (f.isDisplayObject) macro null;
-          else macro nu;
-        init.push(macro ret.set($v{name}, function (target:$target, nu:$type, old:$type) target.$name = $expr));
-      }
-
-      for (e in getEvents(cls)) {
-        var name = macro $v{e.name},
-            type = e.type;
-        type = macro : tink.core.Callback<$type>;
-        init.push(macro ret.set($name, function (target:$target, nu:$type, old:$type) {
-          if (old != null) target.removeEventListener($name, old);
-          if (nu != null) target.addEventListener($name, nu);
-        }));
-      }
+      process(cls, switch cls {
+        case { pack: ['feathers', 'core'], name: 'ValidatingSprite'}: 100000;
+        default:
+          var parent = cls.superClass.t.toString().asComplexType();
+          init.push(macro for (k => v in new coconut.feathersui.internal.Setters<$parent>()) ret.set(k, v));
+          1;
+      });
 
       var ret = macro class $name {
 
-        static final PROPS = {
+        static final INST = {
           var ret = new Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic)->Void>();
           $b{init};
           ret;
         }
 
-        public function new() {}
+        public inline function new()
+          this = INST;
 
-
-        public function set(target:$target, nu:coconut.feathersui.internal.Attributes<$target>, old:coconut.feathersui.internal.Attributes<$target>)
-          coconut.diffing.Factory.Properties.set(target, cast nu, cast old, (target, name, nu, old) -> PROPS[name](target, nu, old));
+        public function set(target:$target, nu:coconut.feathersui.internal.Attributes<$target>, old:coconut.feathersui.internal.Attributes<$target>, rnode:coconut.feathersui.internal.RNode<$target>)
+          coconut.diffing.Factory.Properties.set(target, cast nu, cast old, (target, name, nu, old) -> this[name](target, nu, old));
       }
 
-      // ret.kind = TDAbstract(macro : Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic)->Void>);
-      // ret.meta.push({ name: ':forward', params: [macro keyValueIterator], pos: (macro null).pos });
+      ret.kind = TDAbstract(macro : Map<String, (target:Dynamic, next:Dynamic, prev:Dynamic)->Void>);
+      ret.meta.push({ name: ':forward', params: [macro keyValueIterator], pos: (macro null).pos });
       return ret;
     });
   }

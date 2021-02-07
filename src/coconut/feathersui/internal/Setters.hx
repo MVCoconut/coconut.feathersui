@@ -1,8 +1,8 @@
 package coconut.feathersui.internal;
 
-import openfl.display.DisplayObject;
+import feathers.core.ValidatingSprite;
 
 @:genericBuild(coconut.feathersui.internal.Setters.build())
-class Setters<T:DisplayObject> {
+class Setters<T:ValidatingSprite> {
 
 }
