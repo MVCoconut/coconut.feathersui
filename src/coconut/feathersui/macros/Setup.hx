@@ -33,17 +33,14 @@ class Setup {
 
 		final self = Context.getLocalType().toComplex(); // TODO: type params
 		return fields.concat((macro class {
-			// static final COCONUT_NODE_TYPE = new coconut.feathersui.Renderer.FeathersUINodeType<
-			// 	coconut.feathersui.macros.Attributes<$self>,
-			// 	$self
-			// >((attr) -> coconut.feathersui.macros.Instantiate.nativeView(attr), coconut.feathersui.macros.Events.getEvents());
 
-			static public inline function fromHxx(hxxMeta:{
-				@:optional var key(default, never):coconut.diffing.Key;
-				@:optional var ref(default, never):coconut.ui.Ref<$self>;
-			},
-					attr:coconut.feathersui.internal.Attributes<$self>, ?children:coconut.feathersui.Children):coconut.feathersui.RenderResult {
-				// return COCONUT_NODE_TYPE.vnode(attr, hxxMeta.key, hxxMeta.ref, children);
+			static public inline function fromHxx(
+				hxxMeta:{
+					@:optional var key(default, never):coconut.diffing.Key;
+					@:optional var ref(default, never):coconut.ui.Ref<$self>;
+				},
+				attr:coconut.feathersui.internal.Attributes<$self>, ?children:coconut.feathersui.Children
+			):coconut.feathersui.RenderResult {
 				return new coconut.feathersui.internal.VNode<$self>(attr, hxxMeta.key, hxxMeta.ref, children);
 			}
 		}).fields);
