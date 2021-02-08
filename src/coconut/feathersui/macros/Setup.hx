@@ -33,7 +33,7 @@ class Setup {
 
 		final self = Context.getLocalType().toComplex(); // TODO: type params
 
-		final attr = coconut.feathersui.internal.Attributes<$self>;
+		final attr = macro : coconut.feathersui.internal.Attributes<$self>;
 		final meta = macro : {
 			@:optional var key(default, never):coconut.diffing.Key;
 			@:optional var ref(default, never):coconut.ui.Ref<$self>;
