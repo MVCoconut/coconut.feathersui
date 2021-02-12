@@ -13,9 +13,6 @@ class Playground extends Application {
 
 	#if nadakofl
 	static function main() {
-		// var p:coconut.feathersui.internal.Attributes<Label> = {
-		// };
-		var s = new coconut.feathersui.internal.VNode<Label>({ doubleClickEnabled: true });
 		openfl.display.Stage.create(Playground.new, {
 			element: js.Browser.document.getElementById("main"),
 			background: 0xCCCCCC,
