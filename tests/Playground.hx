@@ -42,7 +42,9 @@ class MyView extends View {
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
 			<Button text= "My own button" onTrigger=${onTriger} />
-			<FormItem text="User Name" content=${hxx('<TextInput prompt="hello@example.com"/>')}/>
+			<FormItem text="User Name">
+				<TextInput prompt="hello@example.com"/>
+			</FormItem>
 			<TestControl
 				onMyEvent=${onMyEvent}
 				onMyEvent2=${onMyEvent2}

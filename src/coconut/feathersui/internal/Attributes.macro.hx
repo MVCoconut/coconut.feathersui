@@ -1,5 +1,6 @@
 package coconut.feathersui.internal;
 
+import coconut.feathersui.macros.Setup;
 import haxe.macro.Context;
 import haxe.macro.Type;
 import haxe.macro.Expr;
@@ -70,11 +71,18 @@ class Attributes {
         pos: (macro null).pos,
       }];
 
+
+      var dFault = switch Setup.defaultXmlProperty(cls) {
+        case Some('xmlContent'): null;
+        case Some(v): v;
+        case None: null;
+      }
+
       function add(f, type)
         attrs.push({
           name: f.name,
           pos: f.pos,
-          meta: optional,
+          meta: if (f.name == dFault) optional.concat([{ name: ':child', params: [], pos: (macro null).pos }]) else optional,
           kind: FProp('default', 'never', type),
           access: [AFinal],
         });

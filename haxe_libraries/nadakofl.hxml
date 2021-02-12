@@ -1,4 +1,4 @@
-# @install: lix --silent download "gh://github.com/back2dos/openfl#e3ed96fab4eb85d7ec2cb02e46cde775cd8a2fa8" into openfl/7.1.1/github/e3ed96fab4eb85d7ec2cb02e46cde775cd8a2fa8
--cp ${HAXE_LIBCACHE}/openfl/7.1.1/github/e3ed96fab4eb85d7ec2cb02e46cde775cd8a2fa8/src
+# @install: lix --silent download "gh://github.com/back2dos/openfl#e89cc40d4fc6e20326bebf200d8c7801967a3408" into openfl/7.1.1/github/e89cc40d4fc6e20326bebf200d8c7801967a3408
+-cp ${HAXE_LIBCACHE}/openfl/7.1.1/github/e89cc40d4fc6e20326bebf200d8c7801967a3408/src
 -D openfl=7.1.1
 -D nadakofl=7.1.1
