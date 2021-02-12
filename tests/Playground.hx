@@ -41,7 +41,7 @@ class MyView extends View {
 			<Label text="MyEvent2 value: ${myEventValue2}" />
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
-			<Button text= "My own button" onTrigger=${onTriger} />
+			<Button onTrigger=${onTriger}>My own button</Button>
 			<FormItem text="User Name">
 				<TextInput prompt="hello@example.com"/>
 			</FormItem>
