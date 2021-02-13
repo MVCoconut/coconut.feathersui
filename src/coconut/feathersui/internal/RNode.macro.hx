@@ -37,44 +37,11 @@ class RNode {
 
 						var setter = 'set_$name';
 						add(macro class {
-							var $name:coconut.feathersui.internal.Inlay = Empty;
-							public function $setter(param:coconut.feathersui.RenderResult, parent, later) {
-
-								final singular = (cast param:coconut.diffing.internal.VNode<feathers.core.ValidatingSprite>).isSingular;
-								final singular = false;
-
-								final applicator = @:privateAccess coconut.feathersui.Renderer.BACKEND;
-
-								function destroy() {
-									switch ($i{name}) {
-										case Plural(cell):
-											cell.destroy(applicator);
-											native.$name = null;
-										case _:
-									}
-									$i{name} = Empty;
-								}
-
-								switch param {
-									case null:
-										destroy();
-									default:
-										switch ($i{name}) {
-											case Singular(_):
-												throw 'assert';
-											case Plural(cell):
-												if (singular) throw 'assert';
-												cell.update(param, null, later);
-											case _:
-												if (singular) throw 'assert';
-												var sprite:feathers.core.ValidatingSprite = new feathers.core.MeasureSprite();
-												var cell = new coconut.diffing.internal.RCell(parent, param, applicator.children(sprite), later);
-												$i{name} = Plural(cell);
-												native.$name = sprite;
-										}
-								}
-
-
+							var $name:coconut.feathersui.internal.Inlay;
+							public function $setter(param, parent, later) {
+								if (this.$name == null)
+									this.$name = new coconut.feathersui.internal.Inlay(parent, (child) -> native.$name = child);
+								this.$name.update(param, later);
 							}
 						});
 					}

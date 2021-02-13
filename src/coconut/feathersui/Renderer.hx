@@ -5,6 +5,7 @@ import tink.state.Observable;
 import feathers.core.*;
 import openfl.display.*;
 
+@:allow(coconut.feathersui)
 class Renderer {
 	static final BACKEND = new FeathersUIBackend();
 
