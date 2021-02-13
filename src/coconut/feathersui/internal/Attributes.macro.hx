@@ -78,12 +78,12 @@ class Attributes {
 				case None: null;
 			}
 
-			function add(f, type)
+			function add(f, type:ComplexType)
 				attrs.push({
 					name: f.name,
 					pos: f.pos,
 					meta: if (f.name == dFault) optional.concat([{ name: ':child', params: [], pos: (macro null).pos }]) else optional,
-					kind: FProp('default', 'never', type),
+					kind: FProp('default', 'never', if (f.name == dFault && type.match(macro : String)) macro : coconut.feathersui.Text else type),
 					access: [AFinal],
 				});
 

@@ -35,7 +35,7 @@ class MyView extends View {
 		<LayoutGroup layout=${new VerticalLayout()}>
 			<Label text="Curretn value: ${value}" />
 			<Label text="MyEvent value: ${myEventValue}" />
-			<Label text="MyEvent2 value: ${myEventValue2}" />
+			<Label>MyEvent2 value: ${myEventValue2}</Label>
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
 			<Button onTrigger=${onTriger}>My own button</Button>
