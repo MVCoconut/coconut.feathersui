@@ -1,14 +1,8 @@
 import openfl.events.Event;
 import feathers.events.TriggerEvent;
-import feathers.controls.Application;
-import feathers.controls.Label;
-import feathers.controls.Button;
-import feathers.controls.TestControl;
-import feathers.controls.LayoutGroup;
-import feathers.layout.VerticalLayout;
-import coconut.feathersui.View;
-import coconut.feathersui.Renderer;
-import feathers.layout.AnchorLayout;
+import feathers.controls.*;
+import coconut.feathersui.*;
+import feathers.layout.*;
 
 class Playground extends Application {
 	public function new() {
@@ -16,6 +10,19 @@ class Playground extends Application {
 		layout = new AnchorLayout();
 		Renderer.mount(this, <MyView/>);
 	}
+
+	#if nadakofl
+	static function main() {
+		openfl.display.Stage.create(Playground.new, {
+			element: js.Browser.document.getElementById("main"),
+			background: 0xCCCCCC,
+			allowHighDPI: true,
+			resizable: true,
+			depthBuffer: false,
+			stencilBuffer: true
+		});
+	}
+	#end
 }
 
 class MyView extends View {
@@ -28,12 +35,15 @@ class MyView extends View {
 		<LayoutGroup layout=${new VerticalLayout()}>
 			<Label text="Curretn value: ${value}" />
 			<Label text="MyEvent value: ${myEventValue}" />
-			<Label text="MyEvent2 value: ${myEventValue2}" />
+			<Label>MyEvent2 value: ${myEventValue2}</Label>
 			<Label text="MyEvent3 value: ${myEventValue3}" />
 			<Label text="MyEvent4 value: ${myEventValue4}" />
-			<Button text= "My own button" onTrigger=${onTriger} />
-			<TestControl 
-				onMyEvent=${onMyEvent} 
+			<Button onTrigger=${onTriger}>My own button</Button>
+			<FormItem text="User Name">
+				<TextInput prompt="hello@example.com"/>
+			</FormItem>
+			<TestControl
+				onMyEvent=${onMyEvent}
 				onMyEvent2=${onMyEvent2}
 				onMyEvent3=${onMyEvent3}
 				onMyEvent4=${onMyEvent4}

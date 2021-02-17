@@ -1,0 +1,7 @@
+-lib coconut.feathersui
+-lib nadakofl
+-D html5
+-cp tests
+-main Playground
+-dce full
+-js bin/playground.js
