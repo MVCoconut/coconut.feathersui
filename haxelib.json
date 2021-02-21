@@ -11,8 +11,8 @@
     "contributors": [
       "UldisB"
     ],
-    "releasenote": "initial release",
-    "version": "1.0.1",
+    "releasenote": "lixify",
+    "version": "1.0.2",
     "dependencies": {
       "feathersui": "",
       "coconut.diffing": "0.2.1"
