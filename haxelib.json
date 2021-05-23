@@ -11,10 +11,10 @@
     "contributors": [
       "UldisB"
     ],
-    "releasenote": "lixify",
-    "version": "1.0.2",
+    "releasenote": "fix dependencies",
+    "version": "1.0.3",
     "dependencies": {
       "feathersui": "",
-      "coconut.diffing": "0.2.1"
+      "coconut.diffing": "0.3.0"
     }
   }
