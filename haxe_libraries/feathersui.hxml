@@ -1,6 +1,7 @@
-# @install: lix --silent download "gh://github.com/BowlerHatLLC/feathersui-openfl#dc6c4a3403ac64190a022e5f3305693f37915777" into feathersui/1.0.0-beta.2/github/dc6c4a3403ac64190a022e5f3305693f37915777
+# @install: lix --silent download "gh://github.com/BowlerHatLLC/feathersui-openfl#2bc419e75e7d172fb1434d49710401a9829f8252" into feathersui/1.0.0-beta.3/github/2bc419e75e7d172fb1434d49710401a9829f8252
+# @run: haxelib run-dir feathersui ${HAXE_LIBCACHE}/feathersui/1.0.0-beta.3/github/2bc419e75e7d172fb1434d49710401a9829f8252
 -lib actuate
 -lib hxargs
 -lib openfl
--cp ${HAXE_LIBCACHE}/feathersui/1.0.0-beta.2/github/dc6c4a3403ac64190a022e5f3305693f37915777/src
--D feathersui=1.0.0-beta.2
+-cp ${HAXE_LIBCACHE}/feathersui/1.0.0-beta.3/github/2bc419e75e7d172fb1434d49710401a9829f8252/src
+-D feathersui=1.0.0-beta.3
