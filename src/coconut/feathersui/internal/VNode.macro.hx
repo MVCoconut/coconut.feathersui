@@ -20,7 +20,7 @@ class VNode {
 					this.data = data;
 				}
 
-				override public function render(parent, cursor, later):coconut.diffing.internal.RNode<feathers.core.ValidatingSprite>
+				override public function render(parent, cursor, later, hydrate):coconut.diffing.internal.RNode<feathers.core.ValidatingSprite>
 					return new coconut.feathersui.internal.RNode<$target>(this, $i{name}, parent, cursor, later);
 
 				override function create() {

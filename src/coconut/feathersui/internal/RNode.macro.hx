@@ -18,7 +18,7 @@ class RNode {
 				> {
 					final setters = new coconut.feathersui.internal.Setters<$target>();
 					public function new(v, cls, parent, cursor, later) {
-						super(v, cls, parent, cursor, later);
+						super(v, cls, parent, cursor, later, false);
 						setters.set(native, v.data, null, this, parent, later);
 					}
 					override function updateNative(native:$target, next:coconut.feathersui.internal.VNode<$target>, prev:coconut.feathersui.internal.VNode<$target>, parent, later) {
