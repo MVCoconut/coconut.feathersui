@@ -30,13 +30,12 @@ class Renderer {
 	static public macro function mount(target, markup);
 }
 
-private class FeathersUICursor implements Cursor<ValidatingSprite> {
+private class FeathersUICursor extends Cursor<ValidatingSprite> {
 	var pos:Int;
 	final container:DisplayObjectContainer;
-	public final applicator:Applicator<ValidatingSprite>;
 
 	public function new(applicator, container:DisplayObjectContainer, pos:Int) {
-		this.applicator = applicator;
+		super(applicator);
 		this.container = container;
 		this.pos = pos;
 	}

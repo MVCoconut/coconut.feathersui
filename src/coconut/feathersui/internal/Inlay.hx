@@ -22,12 +22,12 @@ class Inlay {
 		final singular = (cast r:coconut.diffing.internal.VNode<ValidatingSprite>).isSingular;
 
 		function createSingular() {
-			state = Singular(new RCell(parent, r, new SingleCursor(assign), later));
+			state = Singular(new RCell(parent, r, new SingleCursor(assign), later, false));
 		}
 
 		function createPlural() {
 			final sprite = new MeasureSprite();
-			state = Plural(new RCell(parent, r, applicator.children(sprite), later));
+			state = Plural(new RCell(parent, r, applicator.children(sprite), later, false));
 			assign(sprite);
 		}
 
@@ -73,11 +73,11 @@ private enum InlayState {
 	Plural(p:RCell<ValidatingSprite>);
 }
 
-private class SingleCursor implements Cursor<ValidatingSprite> {
-	public final applicator = Renderer.BACKEND;
+private class SingleCursor extends Cursor<ValidatingSprite> {
 	final assign:DisplayObject->Void;
 
 	public function new(assign) {
+		super(Renderer.BACKEND);
 		this.assign = assign;
 	}
 
