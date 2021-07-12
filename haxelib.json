@@ -12,10 +12,10 @@
       "UldisB"
     ],
     "releasenote": "fix dependencies",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "dependencies": {
       "feathersui": "",
       "coconut.diffing": "0.5.0",
-      "tink.state": "1.0.0-beta.3"
+      "tink_state": "1.0.0-beta.3"
     }
   }
