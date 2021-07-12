@@ -23,7 +23,7 @@ class VNode {
 				override public function render(parent, cursor, later, hydrate):coconut.diffing.internal.RNode<feathers.core.ValidatingSprite>
 					return new coconut.feathersui.internal.RNode<$target>(this, $i{name}, parent, cursor, later);
 
-				override function create() {
+				override function create(?previous) {
 					return @:privateAccess ${ctx.type.getID().instantiate()};//this is not good
 				}
 			};
