@@ -42,6 +42,6 @@ jobs:
           haxe-version: 4.2.3
       - run: |
           haxe -version
-          haxelib submit . ${{ secrets.HAXELIB_AUTH }}
+          haxelib submit . UldisB ${{ secrets.HAXELIB_AUTH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
