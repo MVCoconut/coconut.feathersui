@@ -9,10 +9,11 @@
     "description": "Coconut UI backend for feathers UI",
     "classPath": "src",
     "contributors": [
-      "UldisB"
+      "UldisB",
+      "back2dos"
     ],
-    "releasenote": "fix implicits",
-    "version": "1.0.6",
+    "releasenote": "update contributors",
+    "version": "1.0.7",
     "dependencies": {
       "feathersui": "",
       "coconut.diffing": "0.5.0",
