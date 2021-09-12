@@ -24,10 +24,13 @@ class Attributes {
 			for (m in cls.meta.extract(':event'))
 				for (p in m.params) {
 					var id = getEventName(p);
+					var eventType = getEventType(p);
+					// https://github.com/HaxeFoundation/haxe/issues/8356
+					var event = Context.parse('var event: $eventType', Context.currentPos());
 					{
 						id: id,
 						name: 'on${id.charAt(0).toUpperCase()}${id.substr(1)}',
-						type: getEventType(p).toComplex(),
+						type: event.expr.getParameters()[0][0].type,
 						pos: p.pos,
 					}
 				}

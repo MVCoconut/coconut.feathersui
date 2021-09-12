@@ -1,5 +1,6 @@
 import openfl.events.Event;
 import feathers.events.TriggerEvent;
+import feathers.data.ArrayCollection;
 import feathers.controls.*;
 import coconut.feathersui.*;
 import feathers.layout.*;
@@ -31,6 +32,15 @@ class MyView extends View {
 	@:state var myEventValue2:Int = 0;
 	@:state var myEventValue3:Int = 0;
 	@:state var myEventValue4:Int = 0;
+
+	final dataProvider = new ArrayCollection([
+		{ col1: "row1: col1", col2: "row1: col2", col3: "row1: col3" }
+	]);
+	final columns = new ArrayCollection([
+		new GridViewColumn("Col1", (data) -> data.col1),
+		new GridViewColumn("Col2", (data) -> data.col2),
+		new GridViewColumn("Col3", (data) -> data.col3)
+	]);
 	function render() '
 		<LayoutGroup layout=${new VerticalLayout()}>
 			<Label text="Curretn value: ${value}" />

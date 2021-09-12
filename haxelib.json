@@ -12,8 +12,8 @@
       "UldisB",
       "back2dos"
     ],
-    "releasenote": "fix implicit",
-    "version": "1.0.9",
+    "releasenote": "fix grid view",
+    "version": "1.0.10",
     "dependencies": {
       "feathersui": "",
       "coconut.diffing": "0.5.0",
